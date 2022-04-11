@@ -80,6 +80,18 @@ def get_logs_directory():
         LOGS_DIR = DIR + "logs/"
     return LOGS_DIR
 
+def get_hex_directory():
+    # ========== Project Configuration Constants =================
+    if 'darwin' in sys.platform.lower():
+        HEX_DIR_BASE = get_mac_working_directory()
+        HEX_DIR = HEX_DIR_BASE + "hex/"
+    else:
+        DIR = get_main_dir()
+        if DIR:
+            DIR += '/'
+        HEX_DIR = DIR + "hex/"
+    return HEX_DIR
+
 def get_icon_path():
     icon_name = "r_icon.png"
     dir_path = get_images_directory()
@@ -106,3 +118,4 @@ def get_init_file_directory(): # note this file must be in the location of the i
             DIR += '/'
         # DIR = os.path.dirname(os.path.(sys.argv[0])) + "/"
     return DIR
+    
