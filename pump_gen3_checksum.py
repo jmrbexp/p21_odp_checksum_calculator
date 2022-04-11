@@ -35,7 +35,10 @@ from serial_monitor_gui import SerialMonitorWindow
 
 # Local Backend Imports
 from find_files import get_init_file_directory, get_icon_path, get_splash_image_path
+from hex_files import hex_file_in 
 from style_sheets import app_style
+
+
 
 # Version Display
 GUI_MOTOR_CONTROL_VERSION = "1.0.0"
