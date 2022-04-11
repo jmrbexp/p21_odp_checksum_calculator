@@ -3,9 +3,6 @@
 # - A customizable widget intended to be the main app widget
 # -- this only contains GUI functions and elements
 
-ENABLE_CURRENT_SENSOR_CONFIG_WIDGET = 0
-
-
 # Module Imports
 try:
     import PySide2
@@ -21,7 +18,6 @@ except:
         from pyqtgraph.Qt import QtGui, QtCore
         QtWidgets = QtGui # PyQt5 to PyQt4 patch
 import os
-
 
 from hex_files import hex_file_in
 
@@ -63,11 +59,18 @@ class CentralWidget(QtWidgets.QFrame):
     def init_callbacks(self):
         self.open_button.clicked.connect(self.open_button_cb)
         pass
+
+    def set_serial_monitor_callback(self, callback):
+        self.serial_monitor_cb = callback
+
+    def display_message(self, message, rx=False, add_timestamp=True):
+        if self.serial_monitor_cb:
+            self.serial_monitor_cb(message, rx, add_timestamp)
     # ======= Callback Assignments ==END==
 
     # ======= Callback Implementations =START=
     def open_button_cb(self):
-        print("open button: select file")
+        # print("open button: select file")
         self.file_select_title_text = "Select Firmware File"
         self.file_select_default_directory = QtCore.QDir().homePath()
         self.file_select_name_filter = "Hex files (*.hex *.hxf)"
@@ -77,6 +80,6 @@ class CentralWidget(QtWidgets.QFrame):
         if self.selected_file:
             hex_file_in.import_log_file(self.selected_file)
         else:
-            print("could not open file")
+            self.display_message("could not open file")
     # ======= Callback Implementations ==END==
 

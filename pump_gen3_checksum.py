@@ -198,8 +198,8 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
 
     # ======= Local Widget Callbacks =START=
     def assign_config_callbacks(self):
-        pass
-        # self.SettingsFileWidget.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
+        self.central_widget.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
+        hex_file_in.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
     # ======= Local Widget Callbacks ==END==
 
     # ======= Time Records =======
@@ -231,8 +231,11 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
 
     # --  Timer Callback
     def single_timer_cb(self): # called 4 times, 0=all, 1=tx, 2=tx, monitor, 3=tx (REPEAT)
-        pass
-
+        # Update GUI every 100ms as calculated by SINGLE_TIMEOUT_COUNTER_MAX definition
+        self.serial_piggyback_counter += 1
+        if self.serial_piggyback_counter > self.SINGLE_TIMEOUT_COUNTER_MAX:
+            self.serial_piggyback_counter = 0 # reset counter
+            self.win_serial_monitor.display_buffered_messages() # display text to screen
     # ======= Timers and Timeout callbacks ==END==
 
     # ======= Message Parsing Routines =START=
