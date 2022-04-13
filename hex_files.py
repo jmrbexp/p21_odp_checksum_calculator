@@ -41,7 +41,6 @@ class HexFileInClass():
         self.CHECKSUM_CALC_END_ADDRESS = 0x1FDFC # Exclusive (not included in calc)
         self.PROCESSOR_ROM_SIZE = 0x20000
         self.MIN_LINE_LENGTH = 8
-        pass
         self.init_memory_map()
 
     def init_memory_map(self):
@@ -49,7 +48,6 @@ class HexFileInClass():
         self.base_address = 0x0000
         self.TEST_COUNTER_PRINT_LIMIT = 10
         self.memory_map = [0xFF]*self.PROCESSOR_ROM_SIZE
-        pass
 
     def import_log_file(self, file_path): # parse the file, return the sound data and the constant
         self.calculated_checksum = 0xFFFFFF
