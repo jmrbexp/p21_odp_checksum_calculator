@@ -38,7 +38,7 @@ intel_hex_properties = IntelHexFileProperties()
 class HexFileInClass():
     def __init__(self, parent=None):
         self.CHECKSUM_CALC_START_ADDRESS = 0x2000
-        self.CHECKSUM_CALC_END_ADDRESS = 0x17DFC # Exclusive (not included in calc)
+        self.CHECKSUM_CALC_END_ADDRESS = 0x1FDFC # Exclusive (not included in calc)
         self.PROCESSOR_ROM_SIZE = 0x20000
         self.MIN_LINE_LENGTH = 8
         pass
@@ -117,7 +117,7 @@ class HexFileInClass():
         else:
             self.display_message("firmware checksum does not match calculated checksum. please update firmware source code to the following.")
             output_line = "(ChecksumBytes.c):\nCHECKSUM[6] = {"
-            output_line += "0x00, 0x47, " # These values are fixed in the source code and not used in the calculation
+            output_line += "0x00, 0x48, " # These values are fixed in the source code and not used in the calculation
             output_line += "0x" + "{:02x}".format(calculated_checksum_list[0]).upper() + ", "
             output_line += "0x" + "{:02x}".format(calculated_checksum_list[1]).upper() + ", "
             output_line += "0x" + "{:02x}".format(calculated_checksum_list[2]).upper() + ", "
