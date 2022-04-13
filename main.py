@@ -46,7 +46,7 @@ def main():
     splash_screen.show()
     app.processEvents()
 
-    from pump_gen3_checksum import MainAppWidget # Only import things after splash screen is displayed so splash screen shows up immediately
+    from pump_p21_checksum import MainAppWidget # Only import things after splash screen is displayed so splash screen shows up immediately
     app_windows = MainAppWidget() # instantiates our application's QMainWindow
     app_windows.resize(1160, 250)
     app_windows.center_on_active_screen()
