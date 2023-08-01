@@ -42,11 +42,12 @@ class CentralWidget(QtWidgets.QFrame):
 
     def init_widgets(self):
         self.open_button = QtWidgets.QPushButton("open hex/hxf file")
-        pass
+        self.fix_button = QtWidgets.QPushButton("fix checksum")
 
     def arrange_widgets(self):
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.addWidget(self.open_button)
+        self.layout.addWidget(self.fix_button)
         self.setLayout(self.layout)
         pass
     # ======= Widget Creation/ Arrangement ==END==
@@ -58,6 +59,7 @@ class CentralWidget(QtWidgets.QFrame):
     # ======= Callback Assignments =START=
     def init_callbacks(self):
         self.open_button.clicked.connect(self.open_button_cb)
+        self.fix_button.clicked.connect(self.fix_button_cb)
         pass
 
     def set_serial_monitor_callback(self, callback):
@@ -81,5 +83,25 @@ class CentralWidget(QtWidgets.QFrame):
             hex_file_in.import_log_file(self.selected_file)
         else:
             self.display_message("could not open file")
+
+    def fix_button_cb(self):
+        print("Fixing Checksum!")
+        print("- stored: " + str(hex_file_in.get_stored_rom_checksum()))
+        print("- calculated: " + str(hex_file_in.get_calculated_rom_checksum()))
+        print("- fixing...")#  + str(hex_file_in.get_calculated_rom_checksum()))
+        hex_file_in.fix_rom_checksum()
+        print("- stored (fixed): " + str(hex_file_in.get_stored_rom_checksum()))
+        hex_file_in.write_data_pages_to_file("test01.hex", hex_file_in.memory_map, 0, 64) 
+        # # print("open button: select file")
+        # self.file_select_title_text = "Select Firmware File"
+        # self.file_select_default_directory = QtCore.QDir().homePath()
+        # self.file_select_name_filter = "Hex files (*.hex *.hxf)"
+        # self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
+        # base_file_name = os.path.basename(self.selected_file) # File name without the directory path
+        # # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
+        # if self.selected_file:
+        #     hex_file_in.import_log_file(self.selected_file)
+        # else:
+        #     self.display_message("could not open file")
     # ======= Callback Implementations ==END==
 

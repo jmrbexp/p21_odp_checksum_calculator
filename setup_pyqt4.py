@@ -8,8 +8,8 @@
 # Windows/Linux: python setup_*.py build
 # Output Directory: build/
 
-application_title = "Pump Gen3 - Application Hex File - Checksum Calculator" #what you want to application to be called
-main_python_file = "pump_gen3_checksum.py" #the name of the python file you use to run the program
+application_title = "P21 TEFC - Application Hex File - Checksum Calculator" #what you want to application to be called
+main_python_file = "pump_p21_checksum.py" #the name of the python file you use to run the program
 
 import sys
 import distutils
@@ -18,7 +18,7 @@ from cx_Freeze import setup, Executable
 
 includes = ["atexit","re","sip","readline"]#,"scipy"]
 
-target_name = "pump_gen3_app_checksum"
+target_name = "pump_p21_app_checksum"
 if sys.platform == "win32":  # Windows
     packages = ['numpy', 'pyqtgraph']#['scipy.sparse.linalg', 'scipy.integrate']
     #base = "Console"      
@@ -32,7 +32,7 @@ if sys.platform == "win32":  # Windows
     includefiles += [('logs/empty_log.txt', 'logs/empty_log.txt')]
     includefiles += [('settings.ini', 'settings.ini')]
     target_name += ".exe"
-    build_base_dir = "build/pump_gen3_app_checksum"
+    build_base_dir = "build/pump_p21_checksum"
     build_dir_extension = "exe.%s-%s" % (distutils.util.get_platform(), sys.version[0:3])
     build_final_dir = os.path.join(build_base_dir, build_dir_extension)                                    
 elif sys.platform == "darwin": # Mac
@@ -46,13 +46,13 @@ elif sys.platform == "darwin": # Mac
 else: # Linux
     base = "Console"
     includefiles = []
-    build_base_dir = "build/modbus_control"
+    build_base_dir = "build/pump_p21_checksum"
     build_dir_extension = "exe.%s-%s" % (distutils.util.get_platform(), sys.version[0:3])
     build_final_dir = os.path.join(build_base_dir, build_dir_extension)                                    
 
 Exe_Target = Executable(
     # what to build
-    script = "pump_gen3_checksum.py",
+    script = "pump_p21_checksum.py",
     initScript = None,
     base = base,
     targetName = target_name,

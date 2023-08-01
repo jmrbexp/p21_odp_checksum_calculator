@@ -41,7 +41,7 @@ from style_sheets import app_style
 
 
 # Version Display
-GUI_MOTOR_CONTROL_VERSION = "1.0.0"
+GUI_MOTOR_CONTROL_VERSION = "1.0.2"
 
 # Python2 Patch for raw_input
 # - python3 renamed "raw_input" to "input"
@@ -77,7 +77,7 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
         # print("QMainWindow init start: " + str(time.time()))
 
         # Setup App Title, Icon, and Start Time
-        self.setWindowTitle("Pump Gen3 Checksum Utility - " + GUI_MOTOR_CONTROL_VERSION)
+        self.setWindowTitle("P21 - Application Hex File - Checksum Calculator - " + GUI_MOTOR_CONTROL_VERSION)
         icon_path = get_icon_path()
         self.setWindowIcon(QtGui.QIcon(icon_path))
         self.set_app_start_time() # marked so time outputs are not huge numbers
