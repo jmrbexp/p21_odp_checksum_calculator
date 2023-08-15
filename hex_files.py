@@ -1,8 +1,15 @@
 # debug_file.py: this file contains operations to read/write settings to a file
 import time
+# - time: python 3.8 clock patch
+try:
+    time.clock() # python 3.7 and below
+except:
+    time.clock = time.perf_counter # python 3.8+
 
 from numpy import byte
 from find_files import get_hex_directory
+
+
 
 class IntelHexFileProperties():
     def __init__(self, parent=None):
@@ -58,15 +65,27 @@ class HexFileInClass():
 
     def import_log_file(self, file_path): # parse the file, return the sound data and the constant
         # self.calculated_checksum = 0xFFFFFF
-        # print("import")
+        print("import")
         self.file_path = file_path
-        self.target = self.open_file_for_load()
-        if not self.target: # if file did not open properly exit the routine
-            # print("no target...")
-            return
+
         # parse the file
-        print("parsing: " + str(time.clock()))
-        self.parse_hex_file()
+        file_extension = self.file_path[-4:]
+        # - binary files
+        if file_extension == ".bin":
+            self.target = self.open_binary_file_for_load()
+            if not self.target: # if file did not open properly exit the routine
+                print("no target...")
+                return
+            print("parsing binary file: " + str(time.clock()))
+            self.parse_binary_file()
+        # - hex/text based files
+        else:
+            self.target = self.open_file_for_load()
+            if not self.target: # if file did not open properly exit the routine
+                print("no target...")
+                return
+            print("parsing hex file: " + str(time.clock()))
+            self.parse_hex_file()
         print("done parsing: " + str(time.clock()))
         self.close_file(self.target)
         # Return pertinent values to the parent
@@ -79,26 +98,53 @@ class HexFileInClass():
             pass
             # print("could not close settings file.")
 
+    def open_binary_file_for_load(self):
+        try:
+            target = open(self.file_path, 'rb')
+            return target
+        except IOError:
+            print("could not open file " + str(self.file_path))
+            return False
+
     def open_file_for_load(self):
         try:
             target = open(self.file_path, 'r')
             return target
         except IOError:
-            # print("could not read from file " + str(self.file_path))
+            print("could not open file " + str(self.file_path))
             return False
 
+    def get_binary_data_from_target(self):
+        try: 
+            binary_data = self.target.read()
+            return binary_data
+        except IOError:
+            return False
 
+    def parse_binary_file(self):
+        # Clear local variables used in calculations
+        self.init_memory_map() 
+        # Read Contents of file in to local variables
+        binary_data = self.get_binary_data_from_target()
+        if not binary_data:
+            print("could not read binary data... cancelling import...")
+            return
+        # 
+        self.parse_binary_file_data(binary_data)
+        # Validate
+        self.calculate_bootloader_checksum()
+        self.validate_rom_checksum()
 
 
     def parse_hex_file(self):
         # Clear local variables used in calculations
         self.init_memory_map()
-
         # Read Contents of file in to local variables
         line_buffer = self.read_line()
         while len(line_buffer):
             self.parse_hex_file_line(line_buffer)
             line_buffer = self.read_line()
+        # Validate
         # print(str(self.memory_map[self.CHECKSUM_CALC_START_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+6]))
         self.calculate_bootloader_checksum()
         self.validate_rom_checksum()
@@ -174,6 +220,10 @@ class HexFileInClass():
             output_line += "0x" + "{:02x}".format(self.calculated_checksum_list[3]).upper() + "};\n"
             self.display_message(output_line)
         # output_line += 
+
+    def parse_binary_file_data(self, binary_data):
+        print("parse binary file data!")
+        
 
 
     def parse_hex_file_line(self, unfiltered_line):

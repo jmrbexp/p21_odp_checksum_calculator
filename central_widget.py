@@ -4,6 +4,8 @@
 # -- this only contains GUI functions and elements
 
 # Module Imports
+from app_configuration import app_config
+
 try:
     import PySide2
     from pyqtgraph.Qt import QtGui, QtCore
@@ -18,6 +20,11 @@ except:
         from pyqtgraph.Qt import QtGui, QtCore
         QtWidgets = QtGui # PyQt5 to PyQt4 patch
 import os
+# import unicode
+
+if app_config.is_python3:
+    print("python3 patch for unicode!")
+    unicode = str
 
 from hex_files import hex_file_in
 
@@ -41,7 +48,7 @@ class CentralWidget(QtWidgets.QFrame):
         pass
 
     def init_widgets(self):
-        self.open_button = QtWidgets.QPushButton("open hex/hxf file")
+        self.open_button = QtWidgets.QPushButton("open binary file (hex/hxf/bin)")
         self.fix_button = QtWidgets.QPushButton("fix checksum")
 
     def arrange_widgets(self):
@@ -75,12 +82,28 @@ class CentralWidget(QtWidgets.QFrame):
         # print("open button: select file")
         self.file_select_title_text = "Select Firmware File"
         self.file_select_default_directory = QtCore.QDir().homePath()
-        self.file_select_name_filter = "Hex files (*.hex *.hxf)"
-        self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
-        base_file_name = os.path.basename(self.selected_file) # File name without the directory path
+        self.file_select_name_filter = "Hex files (*.hex *.hxf *.bin)"
+        # self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
+        self.selected_file_name = '' # initialize parameter for storing string of file path
+        self.selected_file = QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter)
         # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
-        if self.selected_file:
-            hex_file_in.import_log_file(self.selected_file)
+
+        if self.selected_file and self.selected_file != ('', ''): # If a file is chosen, the formatting will be checked
+            print('selected_file: ' + str(self.selected_file))
+            if not app_config.is_python3: # Python2 Platform
+                unencoded_file_name = self.selected_file
+                print('encoded2: ' + str(unencoded_file_name))
+                # self.selected_file_name = str(self.selected_file)
+            else: # Python3 Platform
+                unencoded_file_name = self.selected_file[0]
+                print('encoded3: ' + str(unencoded_file_name))
+                # self.selected_file_name = str(self.selected_file[0])
+            self.selected_file_name = unicode(unencoded_file_name) # unencoded_file_name.encode('utf-8')
+            base_file_name = os.path.basename(self.selected_file_name) # File name without the directory path
+
+        if self.selected_file_name:
+            self.display_message("importing file file: " + str(self.selected_file_name))
+            hex_file_in.import_log_file(self.selected_file_name)
         else:
             self.display_message("could not open file")
 
