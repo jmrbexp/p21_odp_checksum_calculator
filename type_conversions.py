@@ -476,6 +476,13 @@ class TypeConversions():
             this_index += 2
         return memory_list
 
+    def convert_list_of_ints_to_list_of_hex(self, list_of_u8s):
+        return_list = []
+        this_index = 0
+        while this_index < len(list_of_u8s):
+            return_list.append(hex(list_of_u8s[this_index]))
+        return return_list
+
 type_converter = TypeConversions()
 
 
