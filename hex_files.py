@@ -222,8 +222,13 @@ class HexFileInClass():
         # output_line += 
 
     def parse_binary_file_data(self, binary_data):
+        start_address = 0
         print("parse binary file data!")
-        
+        print(binary_data)
+        print("- list of integer data")
+        list_of_ints_data = list(binary_data)
+        print(list_of_ints_data)
+        self.put_data_in_memory_map(start_address, list_of_ints_data)
 
 
     def parse_hex_file_line(self, unfiltered_line):
