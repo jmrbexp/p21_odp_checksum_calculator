@@ -577,7 +577,7 @@ class HexFileInClass():
 
     def parse_binary_file(self):
         # Clear local variables used in calculations
-        self.init_memory_map() 
+        self.init_base_address() 
         # Read Contents of file in to local variables
         binary_data = self.get_binary_data_from_target()
         if not binary_data:
@@ -605,11 +605,13 @@ class HexFileInClass():
         if self.write_errors_detected():
             self.display_message("write failures detected in address range:\n0x{:08x} - 0x{:08x}".format(self.write_failure_address_min, self.write_failure_address_max)) 
 
-        # print(str(self.memory_map[self.CHECKSUM_CALC_START_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+6]))
         self.calculate_bootloader_checksum() # TODO: Move
         self.validate_rom_checksum() # TODO: Move
 
     def calculate_bootloader_checksum(self): # TODO: Move
+        if not self.memory_map_out:
+            self.display_message("bootloader checksum (calc): Fail -> No Assigned Memory Map")
+            return
         stored_checksum = self.get_stored_bootloader_checksum()
         self.display_message("bootloader checksum (file): " + str(stored_checksum))
         # self.display_message("bootloader checksum (file): " + str(stored_checksum) + " - " + type_converter.convert_list_of_ints_to_list_of_hex(stored_checksum))
@@ -618,7 +620,7 @@ class HexFileInClass():
         calculated_checksum = 0 # start value - definied in bootloader firmware
         # use memory map to calculate the current checksum based on rom contents.
         for this_address in range(self.BOOTLOADER_END_ADDRESS-4, self.BOOTLOADER_END_ADDRESS):
-            u32_accumulator += self.memory_map[this_address]
+            u32_accumulator += self.memory_map_out.memory_map[this_address]
             u32_counter += 1
             if u32_counter == self.CHECKSUM_CHUNK_SIZE_BYTES: # checksum is calculated in 32 bit chunks, collect four bytes then add in.
                 calculated_checksum += u32_accumulator
@@ -641,11 +643,15 @@ class HexFileInClass():
         # # output_line += 
 
     def get_stored_bootloader_checksum(self): # TODO: Move
-        stored_checksum = self.memory_map[self.BOOTLOADER_END_ADDRESS-4:self.BOOTLOADER_END_ADDRESS]
+        if not self.memory_map_out:
+            return []
+        stored_checksum = self.memory_map_out.memory_map[self.BOOTLOADER_END_ADDRESS-4:self.BOOTLOADER_END_ADDRESS]
         return stored_checksum
 
     def get_stored_rom_checksum(self): # TODO: Move
-        stored_checksum = self.memory_map[self.CHECKSUM_CALC_END_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+4]
+        if not self.memory_map_out:
+            return []
+        stored_checksum = self.memory_map_out.memory_map[self.CHECKSUM_CALC_END_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+4]
         return stored_checksum
 
     def get_calculated_rom_checksum(self): # TODO: Move
@@ -653,7 +659,7 @@ class HexFileInClass():
 
     def fix_rom_checksum(self): # TODO: Move
         for this_byte_index in range(len(self.calculated_checksum_list)):
-            self.memory_map[self.CHECKSUM_CALC_END_ADDRESS+this_byte_index] = self.calculated_checksum_list[this_byte_index] 
+            self.memory_map_out.memory_map[self.CHECKSUM_CALC_END_ADDRESS+this_byte_index] = self.calculated_checksum_list[this_byte_index] 
 
     # def calculate_rom_checksum_polynomial_method(self):
     #     pass
@@ -672,7 +678,7 @@ class HexFileInClass():
         # use memory map to calculate the current checksum based on rom contents.
         # self.calculate_rom_checksum_polynomial_method()
         for this_address in range(self.CHECKSUM_CALC_START_ADDRESS, self.CHECKSUM_CALC_END_ADDRESS):
-            u32_accumulator += self.memory_map[this_address]
+            u32_accumulator += self.memory_map_out.memory_map[this_address]
             u32_counter += 1
             if u32_counter == self.CHECKSUM_CHUNK_SIZE_BYTES: # checksum is calculated in 32 bit chunks, collect four bytes then add in.
                 calculated_checksum += u32_accumulator
