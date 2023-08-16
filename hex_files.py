@@ -50,8 +50,6 @@ class IntelHexFileProperties():
         return_list.append(value_u32 >> 8 & 0xFF)
         return_list.append(value_u32 & 0xFF)
         return return_list
-intel_hex_properties = IntelHexFileProperties()
-
 
 
 # HexFileInClass: Class containing routines for reading and interpreting a hex file, 
@@ -547,14 +545,10 @@ class HexFileOutClass():
     # ======= Callback Assignments ==END==
 
 
-
-
-
-# sound_test_log_out = HexFileOutClass()
 # Virtual Memory Instances
 drive_fw_memory_map_file = MemoryMap_STM32_64kB() # for holding a firmware file to flash to a device
-
 # Hex File Classes
+intel_hex_properties = IntelHexFileProperties()
 hex_file_in = HexFileInClass(memory_map_out=drive_fw_memory_map_file)
 
 # Application Execution Start (if this is the main file, typically it will not be)                                                                                                                                                                                                                                                                                                                                                           
