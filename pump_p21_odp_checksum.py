@@ -35,7 +35,8 @@ from serial_monitor_gui import SerialMonitorWindow
 
 # Local Backend Imports
 from find_files import get_init_file_directory, get_icon_path, get_splash_image_path
-from hex_files import hex_file_in 
+# from hex_files import hex_file_in 
+from product_properties_p21odp import product_p21odp
 from style_sheets import app_style
 
 
@@ -199,7 +200,7 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
     # ======= Local Widget Callbacks =START=
     def assign_config_callbacks(self):
         self.central_widget.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
-        hex_file_in.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
+        product_p21odp.hex_file_in.set_serial_monitor_callback(self.win_serial_monitor.add_message_to_buffer)
     # ======= Local Widget Callbacks ==END==
 
     # ======= Time Records =======

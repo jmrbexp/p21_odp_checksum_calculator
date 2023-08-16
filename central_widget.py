@@ -26,7 +26,8 @@ if app_config.is_python3:
     print("python3 patch for unicode!")
     unicode = str
 
-from hex_files import hex_file_in
+from product_properties_p21odp import product_p21odp
+# from hex_files import product_p21odp.hex_file_in
 
 # CentralWidget: This is a customizable widget designed as the widget that will change from app to app
 # - you may still need to use the MainAppWidget class to acesses some resources.
@@ -103,18 +104,18 @@ class CentralWidget(QtWidgets.QFrame):
 
         if self.selected_file_name:
             self.display_message("importing file file: " + str(self.selected_file_name))
-            hex_file_in.import_log_file(self.selected_file_name)
+            product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
         else:
             self.display_message("could not open file")
 
     def fix_button_cb(self):
         print("Fixing Checksum!")
-        print("- stored: " + str(hex_file_in.get_stored_rom_checksum()))
-        print("- calculated: " + str(hex_file_in.get_calculated_rom_checksum()))
-        print("- fixing...")#  + str(hex_file_in.get_calculated_rom_checksum()))
-        hex_file_in.fix_rom_checksum()
-        print("- stored (fixed): " + str(hex_file_in.get_stored_rom_checksum()))
-        hex_file_in.write_data_pages_to_file("test01.hex", hex_file_in.memory_map, 0, 64) 
+        print("- stored: " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
+        print("- calculated: " + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
+        print("- fixing...")#  + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
+        product_p21odp.hex_file_in.fix_rom_checksum()
+        print("- stored (fixed): " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
+        product_p21odp.hex_file_in.write_data_pages_to_file("test01.hex", product_p21odp.hex_file_in.memory_map, 0, 64) 
         # # print("open button: select file")
         # self.file_select_title_text = "Select Firmware File"
         # self.file_select_default_directory = QtCore.QDir().homePath()
@@ -123,7 +124,7 @@ class CentralWidget(QtWidgets.QFrame):
         # base_file_name = os.path.basename(self.selected_file) # File name without the directory path
         # # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
         # if self.selected_file:
-        #     hex_file_in.import_log_file(self.selected_file)
+        #     product_p21odp.hex_file_in.import_log_file(self.selected_file)
         # else:
         #     self.display_message("could not open file")
     # ======= Callback Implementations ==END==

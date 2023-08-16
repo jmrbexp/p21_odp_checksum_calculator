@@ -544,18 +544,16 @@ class HexFileOutClass():
             self.serial_monitor_cb(message, rx, add_timestamp)
     # ======= Callback Assignments ==END==
 
-
-# Virtual Memory Instances
-drive_fw_memory_map_file = MemoryMap_STM32_64kB() # for holding a firmware file to flash to a device
-# Hex File Classes
+# Properties Class Instances
 intel_hex_properties = IntelHexFileProperties()
-hex_file_in = HexFileInClass(memory_map_out=drive_fw_memory_map_file)
+
+
 
 # Application Execution Start (if this is the main file, typically it will not be)                                                                                                                                                                                                                                                                                                                                                           
 if __name__ == '__main__':
     print("hex_files.py is main application. For Testing Purposes Only!")
-    file_path = "test_hex.hex"
-    print("start import")
-    print(time.clock())
-    hex_file_in.import_log_file(file_path)
-    print(time.clock())
+    # file_path = "test_hex.hex"
+    # print("start import")
+    # print(time.clock())
+    # hex_file_in.import_log_file(file_path)
+    # print(time.clock())
