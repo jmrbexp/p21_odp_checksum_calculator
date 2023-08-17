@@ -216,7 +216,7 @@ class HexFileInClass():
         if not self.memory_map_out:
             self.display_message("bootloader checksum (calc): Fail -> No Assigned Memory Map")
             return
-        stored_checksum = self.get_stored_bootloader_checksum()
+        stored_checksum = self.get_stored_bootloader_checksum_list()
         self.display_message("bootloader checksum (file): " + str(stored_checksum))
         # self.display_message("bootloader checksum (file): " + str(stored_checksum) + " - " + type_converter.convert_list_of_ints_to_list_of_hex(stored_checksum))
         u32_counter = 0
@@ -247,13 +247,13 @@ class HexFileInClass():
         #     self.display_message(output_line)
         # # output_line += 
 
-    def get_stored_bootloader_checksum(self): # TODO: Move
+    def get_stored_bootloader_checksum_list(self): # TODO: Move
         if not self.memory_map_out:
             return []
         stored_checksum = self.memory_map_out.memory_map[self.BOOTLOADER_END_ADDRESS-4:self.BOOTLOADER_END_ADDRESS]
         return stored_checksum
 
-    def get_stored_rom_checksum(self): # TODO: Move 
+    def get_stored_rom_checksum_list(self): # TODO: Move 
         if not self.memory_map_out:
             return []
         stored_checksum = self.memory_map_out.memory_map[self.CHECKSUM_CALC_END_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+4]
@@ -279,7 +279,9 @@ class HexFileInClass():
         calculated_checksum = 0 # start value - definied in bootloader firmware
         # use memory map to read the current checksum stored in rom.
         # self.stored_checksum = self.memory_map[self.CHECKSUM_CALC_END_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+4]
-        stored_checksum = self.get_stored_rom_checksum()
+        stored_checksum_list = self.get_stored_rom_checksum_list()
+
+        
         # use memory map to calculate the current checksum based on rom contents.
         # self.calculate_rom_checksum_polynomial_method()
         for this_address in range(self.CHECKSUM_CALC_START_ADDRESS, self.CHECKSUM_CALC_END_ADDRESS):
@@ -290,14 +292,14 @@ class HexFileInClass():
                 u32_accumulator = 0
                 u32_counter = 0
 
-        self.display_message("application checksum (file): " + str(stored_checksum))
+        self.display_message("application checksum (file): " + str(stored_checksum_list))
         # self.display_message("application checksum (file): " + str(stored_checksum) + " - " + type_converter.convert_list_of_ints_to_list_of_hex(stored_checksum))
         # print(hex(calculated_checksum))
         # Now convert calculated checksum to a list, for easy printing of the desired firmware line.
         self.calculated_checksum_list = intel_hex_properties.convert_u32_to_list_of_u8s(calculated_checksum)
         self.display_message("application checksum (calc): " + str(self.calculated_checksum_list))
         # self.display_message("application checksum (calc): " + str(self.calculated_checksum_list) + " - " + type_converter.convert_list_of_ints_to_list_of_hex(self.calculated_checksum_list))
-        if self.calculated_checksum_list == stored_checksum:
+        if self.calculated_checksum_list == stored_checksum_list:
             self.display_message("firmware stored checksum matches calculated checksum!")
         else:
             self.display_message("firmware checksum does not match calculated checksum. please update firmware source code to the following.")
@@ -309,7 +311,7 @@ class HexFileInClass():
             output_line += "0x" + "{:02x}".format(self.calculated_checksum_list[3]).upper() + "};\n"
             self.display_message(output_line)
         # output_line += 
-        self.update_crc_storage_firmware(stored_checksum, self.calculated_checksum_list)
+        self.update_crc_storage_firmware(stored_checksum_list, self.calculated_checksum_list)
 
     def parse_binary_file_data(self, binary_data, start_address=0):
         # start_address = 0

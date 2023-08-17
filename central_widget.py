@@ -27,6 +27,7 @@ if app_config.is_python3:
     unicode = str
 
 from product_properties_p21odp import product_p21odp
+from type_conversions import type_converter
 # from hex_files import product_p21odp.hex_file_in
 
 
@@ -176,15 +177,18 @@ class CentralWidget(QtWidgets.QFrame):
 
     def update_crc_data_display(self):
         print("update!")
-        bootloader_crc_read = str(product_p21odp.hex_file_in.stored_bootloader_checksum)
+        bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.hex_file_in.stored_bootloader_checksum)
+        bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
         # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
         bootloader_crc_calc = self.bootloader_crc32_value_str
-        firmware_crc_read = str(product_p21odp.hex_file_in.stored_firmware_checksum)
+        # firmware_crc_read_list = str(product_p21odp.hex_file_in.stored_firmware_checksum)
+        firmware_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.hex_file_in.stored_firmware_checksum)
+        firmware_crc_value_str = self.convert_crc_value_to_hex_string(firmware_crc_value)
         # firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
         firmware_crc_calc = self.firmware_crc32_value_str
-        self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_read)
+        self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(bootloader_crc_calc)
-        self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_read)
+        self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(firmware_crc_calc)
 
         print("update END!")

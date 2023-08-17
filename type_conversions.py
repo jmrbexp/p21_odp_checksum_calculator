@@ -195,6 +195,18 @@ class TypeConversions():
             return_list.append(u32_value >> 8*this_byte_index & 0xFF)
         return return_list
 
+    def get_u32_value_from_u8_list(self, u8_list):
+        u32_value = 0
+        # Ensure we don't error from bad input data
+        if len(u8_list) >= self.SIZE_U32_IN_BYTES:
+            list_size = self.SIZE_U32_IN_BYTES
+        else:
+            list_size = len(u8_list)
+
+        for this_byte_index in range(list_size):
+            u32_value += u8_list[this_byte_index] << (8*this_byte_index)
+        return u32_value
+
 
     # get_u8_as_u8_list_from_string: return an 8-bit unsigned integerr from a string value
     # - string values supported are 'hex', 'binary', and 'decimal'
@@ -334,6 +346,8 @@ class TypeConversions():
             return i32_value
         else:
             return self.U32_MAX + i32_value # if i16_value = -1, then return should be 0xFFFFFFFF, -2 then 0xFFFFFFFE
+
+
 
     # get_float_as_u8_list_from_string: return a list of 8-bit unsigned integers from a string value containing a 
     # - string values supported are 'hex', 'binary', and 'decimal'
