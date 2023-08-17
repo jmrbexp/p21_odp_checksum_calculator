@@ -78,7 +78,7 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
         # print("QMainWindow init start: " + str(time.time()))
 
         # Setup App Title, Icon, and Start Time
-        self.setWindowTitle("P21 - Application Hex File - Checksum Calculator - " + GUI_MOTOR_CONTROL_VERSION)
+        self.setWindowTitle("P21 ODP - Drive Hex File - Checksum Calculator - " + GUI_MOTOR_CONTROL_VERSION)
         icon_path = get_icon_path()
         self.setWindowIcon(QtGui.QIcon(icon_path))
         self.set_app_start_time() # marked so time outputs are not huge numbers

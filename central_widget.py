@@ -45,18 +45,58 @@ class CentralWidget(QtWidgets.QFrame):
         self.init_callbacks()
 
     # ======= Widget Creation/ Arrangement =START=
+    # init_system: Initialize all variables and structures used by this class
     def init_system(self):
+        self.last_selected_directory = "" # for save to file function
         pass
 
+    # init_widgets: Initialize all Graphical Objects used by this class
     def init_widgets(self):
-        self.open_button = QtWidgets.QPushButton("open binary file (hex/hxf/bin)")
+        # Declare Widgets
         self.fix_button = QtWidgets.QPushButton("fix checksum")
 
+        # - groupboxes
+        # -- drive firmware
+        self.drive_mcu_fw_groupbox = QtWidgets.QGroupBox("motor drive")
+        self.drive_mcu_firmware_label = QtWidgets.QLabel("firmware")
+        self.drive_mcu_configuration_label = QtWidgets.QLabel("configuration")
+
+        # - firmware update buttons
+        # -- drive firmware
+        self.open_button = QtWidgets.QPushButton("open binary file (hex/hxf/bin)") # TODO: Replace with select_drive_fw_file_button
+        self.select_drive_fw_file_button = QtWidgets.QPushButton("select file")
+        self.write_drive_fw_file_button = QtWidgets.QPushButton("write")
+        self.verify_drive_fw_file_button = QtWidgets.QPushButton("read")
+        self.drive_fw_status_label = QtWidgets.QLabel("-")
+        self.drive_fw_status_label.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+
+        # -- spacer widgets
+        self.spacer = QtWidgets.QLabel() # Used to push all widgets to the top when the window is big
+        self.spacer.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+
+
+    # arrange_widgets: Set up on-screen position of all GUI Objects used by this class
     def arrange_widgets(self):
+        # Motor Drive Groupbox
+        # - drive fw layout
+        self.drive_fw_layout = QtWidgets.QGridLayout()
+        self.drive_fw_layout.addWidget(self.drive_mcu_firmware_label, 0, 1, 1, 1)
+        self.drive_fw_layout.addWidget(self.select_drive_fw_file_button, 1, 1, 1, 3)
+        self.drive_fw_layout.addWidget(self.write_drive_fw_file_button, 1, 4, 1, 1)
+        self.drive_fw_layout.addWidget(self.drive_fw_status_label, 1, 5, 1, 1)
+        if app_config.DISPLAY_READ_BUTTONS:
+            self.drive_fw_layout.addWidget(self.verify_drive_fw_file_button, 1, 6, 1, 1)
+        self.drive_fw_layout.setContentsMargins(10,20,10,20)
+        # - assign layout to groupbox
+        self.drive_mcu_fw_groupbox.setLayout(self.drive_fw_layout)
+
+        # - global layout
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.addWidget(self.open_button)
         self.layout.addWidget(self.fix_button)
+        self.layout.addWidget(self.drive_mcu_fw_groupbox)
         self.setLayout(self.layout)
+
         pass
     # ======= Widget Creation/ Arrangement ==END==
 

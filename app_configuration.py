@@ -13,6 +13,7 @@ class AppConfigurationOptions():
     def init_system(self):
         # - Widget Enables
         self.ENABLE_GRAPH_LEGEND = True # DEFAULT: False -> in Python2 build environment, legend causes segmentation faults at app close
+        self.DISPLAY_READ_BUTTONS = True # DEFAULT: False -> Factory doesn't need these.
         # - Communication Settings
         self.DISABLE_CONNECTION_MESSAGES = False # DEFAULT: False -> disable messages sent at com port connection (for bootloader debugging)
         # - App Variants
