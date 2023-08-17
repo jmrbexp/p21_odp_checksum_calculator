@@ -155,10 +155,24 @@ class CentralWidget(QtWidgets.QFrame):
             self.display_message("importing firmware file: " + str(self.selected_file_name))
             product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
             self.select_drive_fw_file_button.setText(base_file_name)
+            self.update_crc_data_display()
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
 
         else:
             self.display_message("could not open file")
+
+    def update_crc_data_display(self):
+        print("update!")
+        bootloader_crc_read = str(product_p21odp.hex_file_in.stored_bootloader_checksum)
+        bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
+        firmware_crc_read = str(product_p21odp.hex_file_in.stored_firmware_checksum)
+        firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
+        self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_read)
+        self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(bootloader_crc_calc)
+        self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_read)
+        self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(firmware_crc_calc)
+
+        print("update END!")
 
     def fix_button_cb(self):
         print("Fixing Checksum!")
@@ -223,7 +237,7 @@ class DriveFirmwareCrcsWidget(QtWidgets.QFrame):
         self.drive_bootlader_read_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.drive_bootlader_read_crc_val_label = QtWidgets.QLabel("0x00000000")
         #
-        self.drive_bootlader_calc_crc_label = QtWidgets.QLabel("bootloadercrc (calc) - ")
+        self.drive_bootlader_calc_crc_label = QtWidgets.QLabel("bootloader crc (calc) - ")
         self.drive_bootlader_calc_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
         self.drive_bootlader_calc_crc_val_label = QtWidgets.QLabel("0x00000000")
         #

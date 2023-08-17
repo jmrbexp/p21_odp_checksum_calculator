@@ -80,6 +80,28 @@ class HexFileInClass():
         self.calculated_checksum_list = [0]*self.CHECKSUM_LENGTH_BYTES
         self.init_base_address()
 
+    # init_crc_storage(self):
+    def init_crc_storage(self):
+        self.stored_bootloader_checksum = 0xFFFFFFFF
+        self.calc_bootloader_checksum = 0xFFFFFFFF
+        self.stored_firmware_checksum = 0xFFFFFFFF
+        self.calc_firmware_checksum = 0xFFFFFFFF
+
+    def update_crc_storage(self, stored_bootloader_crc, calc_bootloader_crc, stored_firmware_crc, calc_firmware_crc):
+        self.stored_bootloader_checksum = stored_bootloader_crc
+        self.calc_bootloader_checksum = calc_bootloader_crc
+        self.stored_firmware_checksum = stored_firmware_crc
+        self.calc_firmware_checksum = calc_firmware_crc
+
+    def update_crc_storage_bootloader(self, stored_bootloader_crc, calc_bootloader_crc):
+        self.stored_bootloader_checksum = stored_bootloader_crc
+        self.calc_bootloader_checksum = calc_bootloader_crc
+
+    def update_crc_storage_firmware(self, stored_firmware_crc, calc_firmware_crc):
+        self.stored_firmware_checksum = stored_firmware_crc
+        self.calc_firmware_checksum = calc_firmware_crc
+
+
     # init_base_address: initialize any memory properties specific to the processor being used
     def init_base_address(self): # Base Address is used to allow hex files to address 32-bit address space (while only putting 16-bit address in each file line)
         self.base_address = 0x0000
@@ -209,6 +231,7 @@ class HexFileInClass():
                 u32_counter = 0
         calculated_checksum_list = intel_hex_properties.convert_u32_to_list_of_u8s(calculated_checksum)
         self.display_message("bootloader checksum (calc): " + str(calculated_checksum_list))
+        self.update_crc_storage_bootloader(stored_checksum, calculated_checksum_list)
         # self.display_message("bootloader checksum (calc): " + str(calculated_checksum_list)+ " - " + type_converter.convert_list_of_ints_to_list_of_hex(calculated_checksum_list))
         # if calculated_checksum_list == stored_checksum:
         #     self.display_message("firmware stored checksum matches calculated checksum!")
@@ -285,6 +308,7 @@ class HexFileInClass():
             output_line += "0x" + "{:02x}".format(self.calculated_checksum_list[3]).upper() + "};\n"
             self.display_message(output_line)
         # output_line += 
+        self.update_crc_storage_firmware(stored_checksum, self.calculated_checksum_list)
 
     def parse_binary_file_data(self, binary_data):
         start_address = 0
