@@ -1,4 +1,5 @@
 # memory_map_stm32_64kb.py
+from type_conversions import type_converter
 
 # MemoryMap_STM32_64kB Class:  Simulates a Processor
 # - holds a memory storage location for each rom byte
@@ -392,6 +393,9 @@ class MemoryMap_STM32_64kB():
         end_address = (max(page_id_list)+1)*self.ROM_PAGE_SIZE # exclusive (does not include last byte)
         if ignore_last_four_bytes:
             end_address = end_address - 4
+
+        print("start: " + str(hex(start_address)))
+        print("end: " + str(hex(end_address)))
         crc32_value = self.get_crc32_for_address_range(start_address, end_address)
         return crc32_value
 
