@@ -158,7 +158,9 @@ class CentralWidget(QtWidgets.QFrame):
             self.update_crc_data_display()
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
 
-            crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(0,16)), ignore_last_four_bytes=True)
+            P21_ODP_FLASH_PAGE_FIRMWARE_START = 3 # TODO: Move
+            P21_ODP_FLASH_PAGE_FIRMWARE_END = 19 # Exclusive TODO: MOVE
+            crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
             # crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(32)), ignore_last_four_bytes=False)
             # crc32_value = drive_fw_memory_map_file.get_crc_u32_from_page_list(list(range(3,16)), ignore_last_four_bytes=True)
             print("CRC - Safety Area" + ": 0x{:08x}".format(crc32_value))

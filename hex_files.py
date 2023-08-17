@@ -187,7 +187,8 @@ class HexFileInClass():
             print("could not read binary data... cancelling import...")
             return
         # 
-        self.parse_binary_file_data(binary_data)
+        P21_ODP_FIRMWARE_START_ADDRESS = 0x1800
+        self.parse_binary_file_data(binary_data, start_address=P21_ODP_FIRMWARE_START_ADDRESS)
         # Validate
         self.calculate_bootloader_checksum()
         self.validate_rom_checksum()
@@ -310,8 +311,8 @@ class HexFileInClass():
         # output_line += 
         self.update_crc_storage_firmware(stored_checksum, self.calculated_checksum_list)
 
-    def parse_binary_file_data(self, binary_data):
-        start_address = 0
+    def parse_binary_file_data(self, binary_data, start_address=0):
+        # start_address = 0
         print("parse binary file data!")
         print(binary_data)
         print("- list of integer data")
