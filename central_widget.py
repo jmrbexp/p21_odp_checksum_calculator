@@ -154,7 +154,8 @@ class CentralWidget(QtWidgets.QFrame):
 
         if self.selected_file_name:
             self.display_message("importing firmware file: " + str(self.selected_file_name))
-            product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
+            # product_p21odp.hex_file_in.import_firmware_file(self.selected_file_name)
+            product_p21odp.import_firmware_file(self.selected_file_name)
             self.select_drive_fw_file_button.setText(base_file_name)
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
 
@@ -177,13 +178,16 @@ class CentralWidget(QtWidgets.QFrame):
 
     def update_crc_data_display(self):
         # print("update!")
-        bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.hex_file_in.stored_bootloader_checksum)
-        bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
+        # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
+        # bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
+        # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
+        bootloader_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_bootloader_checksum)
         # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
         bootloader_crc_calc = self.bootloader_crc32_value_str
         # firmware_crc_read_list = str(product_p21odp.hex_file_in.stored_firmware_checksum)
-        firmware_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.hex_file_in.stored_firmware_checksum)
-        firmware_crc_value_str = self.convert_crc_value_to_hex_string(firmware_crc_value)
+        # firmware_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_firmware_checksum)
+        # firmware_crc_value_str = self.convert_crc_value_to_hex_string(firmware_crc_value)
+        firmware_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_firmware_checksum)
         # firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
         firmware_crc_calc = self.firmware_crc32_value_str
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_value_str)
@@ -194,24 +198,15 @@ class CentralWidget(QtWidgets.QFrame):
         # print("update END!")
 
     def fix_button_cb(self):
-        print("Fixing Checksum!")
-        print("- stored: " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
-        print("- calculated: " + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
-        print("- fixing...")#  + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
-        product_p21odp.hex_file_in.fix_rom_checksum()
-        print("- stored (fixed): " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
-        product_p21odp.hex_file_in.write_data_pages_to_file("test01.hex", product_p21odp.hex_file_in.memory_map, 0, 64) 
-        # # print("open button: select file")
-        # self.file_select_title_text = "Select Firmware File"
-        # self.file_select_default_directory = QtCore.QDir().homePath()
-        # self.file_select_name_filter = "Hex files (*.hex *.hxf)"
-        # self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
-        # base_file_name = os.path.basename(self.selected_file) # File name without the directory path
-        # # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
-        # if self.selected_file:
-        #     product_p21odp.hex_file_in.import_log_file(self.selected_file)
-        # else:
-        #     self.display_message("could not open file")
+        print("Fixing Checksum! INERT!!!")
+        # print("- stored: " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
+        # print("- calculated: " + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
+        # print("- fixing...")#  + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
+        # product_p21odp.hex_file_in.fix_rom_checksum()
+        # print("- stored (fixed): " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
+        # product_p21odp.hex_file_in.write_data_pages_to_file("test01.hex", product_p21odp.hex_file_in.memory_map, 0, 64) 
+
+
     # ======= Callback Implementations ==END==
     def set_last_selected_directory(self, directory):
         if os.path.exists(directory):
