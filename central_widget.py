@@ -181,11 +181,19 @@ class CentralWidget(QtWidgets.QFrame):
         #     self.display_message("could not open file")
     # ======= Callback Implementations ==END==
     def set_last_selected_directory(self, directory):
-        if os.path.isdir(directory):
+        if os.path.exists(directory):
             print('set last: good path!')
             self.last_selected_directory = directory
         else:
             print('set last: bad path...')
+
+    def get_last_selected_directory(self):
+        if os.path.exists(self.last_selected_directory):
+            print('get last: good path!')
+            return self.last_selected_directory
+        else:
+            print('get last: bad path (returning empty string)...')
+            return ""
 
 # DriveFirmwareCrcsWidget: Displays all firmware related CRC Information
 class DriveFirmwareCrcsWidget(QtWidgets.QFrame):

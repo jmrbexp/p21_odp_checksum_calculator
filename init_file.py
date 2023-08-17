@@ -70,7 +70,7 @@ class InitFileClass():
             line_buffer = self.remove_comments_from_line(line_buffer)
             line_buffer = self.replace_common_separators_with_spaces(line_buffer)
             # split the line so we can separate categories from their values
-            split_line = line_buffer.split()
+            split_line = line_buffer.split(maxsplit=1) # only split one time, so strings can have spaces in them
             # parse line: Store Category and Value if both exists
             if len(split_line) > 1:
                 category_str = split_line[0].lower()
@@ -98,7 +98,7 @@ class InitFileClass():
             # print("could not close settings file.")
 
     # save_init_file: main function (shutdown) -> saves in 'init_file' writing settings to be restored at next app startup.
-    def save_init_file(self, file_path, this_value):
+    def save_init_file(self, file_path):
         file_buffer = ""
         line_buffer = ""
         write_file_target = self.open_init_file_for_save(file_path)

@@ -294,6 +294,13 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
     # about_to_quit: called by Qt QApplication just before it shuts down
     # - typically used to save settings to a file or end non-gui threads
     def about_to_quit_cb(self):
+        last_dir = self.central_widget.get_last_selected_directory()
+        if last_dir: # if valid path, update init file so it loads up next time.
+            # Add Quotes on each side to ensure we handle spaces properly when importing
+            # last_dir_with_quotes = '"' + last_dir + '"'
+            init_settings.update_last_selected_directory(last_dir)
+
+        com_port_value = ""
         # comm_sched.ack_received_cb = None # Don't allow this function to be called when app is closing down. (Patches segfaults on old 2.7 python versions)
         # com_port.end_read_thread() # shut down the serial port read thread.
         # com_port_value = com_port.connected_device_text
@@ -303,6 +310,10 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
         # else:
         #     pass
         #     # print("no connected com port, not saving")
+        if last_dir or com_port_value:
+            init_settings.save_init_file(self.init_file_path)
+        else:
+            print("no settings to write. not saving init file")
         print ("Goodbye!") # print message to terminal
     # ======= Exit Routine Callbacks ==END==
 
