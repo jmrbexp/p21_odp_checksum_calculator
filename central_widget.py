@@ -155,25 +155,33 @@ class CentralWidget(QtWidgets.QFrame):
             self.display_message("importing firmware file: " + str(self.selected_file_name))
             product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
             self.select_drive_fw_file_button.setText(base_file_name)
-            self.update_crc_data_display()
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
 
+            P21_ODP_FLASH_PAGE_BOOTLOADER_START = 0 # TODO: Move
+            P21_ODP_FLASH_PAGE_BOOTLOADER_END = 3 # Exclusive TODO: MOVE
             P21_ODP_FLASH_PAGE_FIRMWARE_START = 3 # TODO: Move
             P21_ODP_FLASH_PAGE_FIRMWARE_END = 19 # Exclusive TODO: MOVE
-            crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
-            # crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(32)), ignore_last_four_bytes=False)
-            # crc32_value = drive_fw_memory_map_file.get_crc_u32_from_page_list(list(range(3,16)), ignore_last_four_bytes=True)
-            print("CRC - Safety Area" + ": 0x{:08x}".format(crc32_value))
-            print("-- should be: 0x4A7CB2E6")
+            self.bootloader_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_BOOTLOADER_START,P21_ODP_FLASH_PAGE_BOOTLOADER_END)), ignore_last_four_bytes=True)
+            self.bootloader_crc32_value_str = self.convert_crc_value_to_hex_string(self.bootloader_crc32_value)
+            self.firmware_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
+            self.firmware_crc32_value_str = self.convert_crc_value_to_hex_string(self.firmware_crc32_value)
+            
+            self.update_crc_data_display()
         else:
             self.display_message("could not open file")
+
+    def convert_crc_value_to_hex_string(self, crc_value):
+        return "0x{:08x}".format(crc_value)
+    
 
     def update_crc_data_display(self):
         print("update!")
         bootloader_crc_read = str(product_p21odp.hex_file_in.stored_bootloader_checksum)
-        bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
+        # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
+        bootloader_crc_calc = self.bootloader_crc32_value_str
         firmware_crc_read = str(product_p21odp.hex_file_in.stored_firmware_checksum)
-        firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
+        # firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
+        firmware_crc_calc = self.firmware_crc32_value_str
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_read)
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(bootloader_crc_calc)
         self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_read)

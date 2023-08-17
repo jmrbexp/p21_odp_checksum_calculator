@@ -69,8 +69,8 @@ class HexFileInClass():
         self.BOOTLOADER_END_ADDRESS = 0x1800 # Exclusive (not included in calc)
         # BOOTLOADER CHECKSUM: assummd to be at END_ADDRESS-4 (TODO: REVIEW)
         self.CHECKSUM_CALC_START_ADDRESS = 0x1800
-        # self.CHECKSUM_CALC_END_ADDRESS = 0x97FC # Exclusive (not included in calc)
-        self.CHECKSUM_CALC_END_ADDRESS = 0x7FFC # Exclusive (not included in calc)
+        self.CHECKSUM_CALC_END_ADDRESS = 0x97FC # Exclusive (not included in calc)
+        # self.CHECKSUM_CALC_END_ADDRESS = 0x7FFC # Exclusive (not included in calc)
         self.PROCESSOR_ROM_SIZE = 0x10000
         
         self.MIN_LINE_LENGTH = 8
