@@ -80,7 +80,7 @@ class HexFileInClass():
         self.calculated_checksum_list = [0]*self.CHECKSUM_LENGTH_BYTES
         self.init_base_address()
 
-    # init_crc_storage(self):
+    # init_crc_storage(self): TODO: crc_storage has some redundancy, firmware crcs are stored globally twice
     def init_crc_storage(self):
         self.stored_bootloader_checksum = 0xFFFFFFFF
         self.calc_bootloader_checksum = 0xFFFFFFFF
@@ -252,7 +252,7 @@ class HexFileInClass():
         stored_checksum = self.memory_map_out.memory_map[self.BOOTLOADER_END_ADDRESS-4:self.BOOTLOADER_END_ADDRESS]
         return stored_checksum
 
-    def get_stored_rom_checksum(self): # TODO: Move
+    def get_stored_rom_checksum(self): # TODO: Move 
         if not self.memory_map_out:
             return []
         stored_checksum = self.memory_map_out.memory_map[self.CHECKSUM_CALC_END_ADDRESS:self.CHECKSUM_CALC_END_ADDRESS+4]
