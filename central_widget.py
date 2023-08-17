@@ -134,76 +134,35 @@ class CentralWidget(QtWidgets.QFrame):
             self.file_select_default_directory = self.last_selected_directory
 
         self.file_select_name_filter = "Hex files (*.hex *.hxf *.bin)"
-        # self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
         self.selected_file_name = '' # initialize parameter for storing string of file path
         self.selected_file = QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter)
-        # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
 
         if self.selected_file and self.selected_file != ('', ''): # If a file is chosen, the formatting will be checked
             # print('selected_file: ' + str(self.selected_file))
             if not app_config.is_python3: # Python2 Platform
                 unencoded_file_name = self.selected_file
-                # print('encoded2: ' + str(unencoded_file_name))
-                # self.selected_file_name = str(self.selected_file)
             else: # Python3 Platform
                 unencoded_file_name = self.selected_file[0]
-                # print('encoded3: ' + str(unencoded_file_name))
-                # self.selected_file_name = str(self.selected_file[0])
             self.selected_file_name = unicode(unencoded_file_name) # unencoded_file_name.encode('utf-8')
             base_file_name = os.path.basename(self.selected_file_name) # File name without the directory path
 
         if self.selected_file_name:
             self.display_message("importing firmware file: " + str(self.selected_file_name))
-            # product_p21odp.hex_file_in.import_firmware_file(self.selected_file_name)
             product_p21odp.import_firmware_file(self.selected_file_name)
             self.select_drive_fw_file_button.setText(base_file_name)
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
-
-            # P21_ODP_FLASH_PAGE_BOOTLOADER_START = 0 # TODO: Move
-            # P21_ODP_FLASH_PAGE_BOOTLOADER_END = 3 # Exclusive TODO: MOVE
-            # P21_ODP_FLASH_PAGE_FIRMWARE_START = 3 # TODO: Move
-            # P21_ODP_FLASH_PAGE_FIRMWARE_END = 19 # Exclusive TODO: MOVE
-            # self.bootloader_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_BOOTLOADER_START,P21_ODP_FLASH_PAGE_BOOTLOADER_END)), ignore_last_four_bytes=True)
-            # self.bootloader_crc32_value_str = self.convert_crc_value_to_hex_string(self.bootloader_crc32_value)
-            # self.firmware_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
-            # self.firmware_crc32_value_str = self.convert_crc_value_to_hex_string(self.firmware_crc32_value)
-            
             self.update_crc_data_display()
         else:
             self.display_message("could not open file")
 
-
-    
-
     def update_crc_data_display(self):
-        # print("update!")
-        # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
-        # bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
-        # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
-        # bootloader_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_bootloader_checksum)
-        # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
-        # bootloader_crc_calc = self.bootloader_crc32_value_str
-        # firmware_crc_read_list = str(product_p21odp.hex_file_in.stored_firmware_checksum)
-        # firmware_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_firmware_checksum)
-        # firmware_crc_value_str = self.convert_crc_value_to_hex_string(firmware_crc_value)
-        # firmware_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_firmware_checksum)
-        # firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
-        # firmware_crc_calc = self.firmware_crc32_value_str
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(product_p21odp.stored_bootloader_crc32_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(product_p21odp.bootloader_crc32_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(product_p21odp.stored_firmware_crc32_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(product_p21odp.firmware_crc32_value_str)
 
-        # print("update END!")
-
     def fix_button_cb(self):
         print("Fixing Checksum! INERT!!!")
-        # print("- stored: " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
-        # print("- calculated: " + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
-        # print("- fixing...")#  + str(product_p21odp.hex_file_in.get_calculated_rom_checksum()))
-        # product_p21odp.hex_file_in.fix_rom_checksum()
-        # print("- stored (fixed): " + str(product_p21odp.hex_file_in.get_stored_rom_checksum()))
-        # product_p21odp.hex_file_in.write_data_pages_to_file("test01.hex", product_p21odp.hex_file_in.memory_map, 0, 64) 
 
 
     # ======= Callback Implementations ==END==
