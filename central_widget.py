@@ -127,7 +127,11 @@ class CentralWidget(QtWidgets.QFrame):
     def select_drive_fw_file_button_cb(self):
         # print("open button: select file")
         self.file_select_title_text = "Select Firmware File"
-        self.file_select_default_directory = QtCore.QDir().homePath()
+        if not self.last_selected_directory:
+            self.file_select_default_directory = QtCore.QDir().homePath()
+        else:
+            self.file_select_default_directory = self.last_selected_directory
+
         self.file_select_name_filter = "Hex files (*.hex *.hxf *.bin)"
         # self.selected_file = str(QtWidgets.QFileDialog.getOpenFileName(self, self.file_select_title_text, self.file_select_default_directory, self.file_select_name_filter))
         self.selected_file_name = '' # initialize parameter for storing string of file path
@@ -148,9 +152,11 @@ class CentralWidget(QtWidgets.QFrame):
             base_file_name = os.path.basename(self.selected_file_name) # File name without the directory path
 
         if self.selected_file_name:
-            self.display_message("importing file file: " + str(self.selected_file_name))
+            self.display_message("importing firmware file: " + str(self.selected_file_name))
             product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
             self.select_drive_fw_file_button.setText(base_file_name)
+            self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
+
         else:
             self.display_message("could not open file")
 
@@ -174,7 +180,8 @@ class CentralWidget(QtWidgets.QFrame):
         # else:
         #     self.display_message("could not open file")
     # ======= Callback Implementations ==END==
-
+    def set_last_selected_directory(self, directory):
+        self.last_selected_directory = directory
 
 # DriveFirmwareCrcsWidget: Displays all firmware related CRC Information
 class DriveFirmwareCrcsWidget(QtWidgets.QFrame):
@@ -191,7 +198,6 @@ class DriveFirmwareCrcsWidget(QtWidgets.QFrame):
     # ======= Widget Creation/ Arrangement =START=
     # init_system: Initialize all variables and structures used by this class
     def init_system(self):
-        self.last_selected_directory = "" # for save to file function
         pass
 
     # init_widgets: Initialize all Graphical Objects used by this class
