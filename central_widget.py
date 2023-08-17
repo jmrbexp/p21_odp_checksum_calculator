@@ -159,21 +159,20 @@ class CentralWidget(QtWidgets.QFrame):
             self.select_drive_fw_file_button.setText(base_file_name)
             self.set_last_selected_directory(QtCore.QDir().absoluteFilePath(self.selected_file_name))
 
-            P21_ODP_FLASH_PAGE_BOOTLOADER_START = 0 # TODO: Move
-            P21_ODP_FLASH_PAGE_BOOTLOADER_END = 3 # Exclusive TODO: MOVE
-            P21_ODP_FLASH_PAGE_FIRMWARE_START = 3 # TODO: Move
-            P21_ODP_FLASH_PAGE_FIRMWARE_END = 19 # Exclusive TODO: MOVE
-            self.bootloader_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_BOOTLOADER_START,P21_ODP_FLASH_PAGE_BOOTLOADER_END)), ignore_last_four_bytes=True)
-            self.bootloader_crc32_value_str = self.convert_crc_value_to_hex_string(self.bootloader_crc32_value)
-            self.firmware_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
-            self.firmware_crc32_value_str = self.convert_crc_value_to_hex_string(self.firmware_crc32_value)
+            # P21_ODP_FLASH_PAGE_BOOTLOADER_START = 0 # TODO: Move
+            # P21_ODP_FLASH_PAGE_BOOTLOADER_END = 3 # Exclusive TODO: MOVE
+            # P21_ODP_FLASH_PAGE_FIRMWARE_START = 3 # TODO: Move
+            # P21_ODP_FLASH_PAGE_FIRMWARE_END = 19 # Exclusive TODO: MOVE
+            # self.bootloader_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_BOOTLOADER_START,P21_ODP_FLASH_PAGE_BOOTLOADER_END)), ignore_last_four_bytes=True)
+            # self.bootloader_crc32_value_str = self.convert_crc_value_to_hex_string(self.bootloader_crc32_value)
+            # self.firmware_crc32_value = product_p21odp.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(P21_ODP_FLASH_PAGE_FIRMWARE_START,P21_ODP_FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
+            # self.firmware_crc32_value_str = self.convert_crc_value_to_hex_string(self.firmware_crc32_value)
             
             self.update_crc_data_display()
         else:
             self.display_message("could not open file")
 
-    def convert_crc_value_to_hex_string(self, crc_value):
-        return "0x{:08x}".format(crc_value)
+
     
 
     def update_crc_data_display(self):
@@ -181,19 +180,19 @@ class CentralWidget(QtWidgets.QFrame):
         # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
         # bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
         # bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_bootloader_checksum)
-        bootloader_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_bootloader_checksum)
+        # bootloader_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_bootloader_checksum)
         # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
-        bootloader_crc_calc = self.bootloader_crc32_value_str
+        # bootloader_crc_calc = self.bootloader_crc32_value_str
         # firmware_crc_read_list = str(product_p21odp.hex_file_in.stored_firmware_checksum)
         # firmware_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.stored_firmware_checksum)
         # firmware_crc_value_str = self.convert_crc_value_to_hex_string(firmware_crc_value)
-        firmware_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_firmware_checksum)
+        # firmware_crc_value_str = self.convert_crc_value_to_hex_string(product_p21odp.stored_firmware_checksum)
         # firmware_crc_calc = str(product_p21odp.hex_file_in.calc_firmware_checksum)
-        firmware_crc_calc = self.firmware_crc32_value_str
-        self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(bootloader_crc_value_str)
-        self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(bootloader_crc_calc)
-        self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_value_str)
-        self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(firmware_crc_calc)
+        # firmware_crc_calc = self.firmware_crc32_value_str
+        self.drive_mcu_fw_crc_groupbox.drive_bootlader_read_crc_val_label.setText(product_p21odp.stored_bootloader_crc32_value_str)
+        self.drive_mcu_fw_crc_groupbox.drive_bootlader_calc_crc_val_label.setText(product_p21odp.bootloader_crc32_value_str)
+        self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(product_p21odp.stored_firmware_crc32_value_str)
+        self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(product_p21odp.firmware_crc32_value_str)
 
         # print("update END!")
 

@@ -207,6 +207,8 @@ class TypeConversions():
             u32_value += u8_list[this_byte_index] << (8*this_byte_index)
         return u32_value
 
+    def convert_u32_crc_value_to_hex_string(self, crc_value):
+        return "0x{:08x}".format(crc_value)
 
     # get_u8_as_u8_list_from_string: return an 8-bit unsigned integerr from a string value
     # - string values supported are 'hex', 'binary', and 'decimal'

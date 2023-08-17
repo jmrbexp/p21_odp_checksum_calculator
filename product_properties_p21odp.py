@@ -1,6 +1,7 @@
 # product_properties_p21odp.py
 from memory_map_stm32_64kb import MemoryMap_STM32_64kB
 from hex_files import HexFileInClass, intel_hex_properties
+from type_conversions import type_converter
 
 # Product_P21Odp_MemoryMap Class: Stores Linker file properties of the P21Odp product
 class Product_P21Odp_MemoryMap():
@@ -11,16 +12,23 @@ class Product_P21Odp_MemoryMap():
         self.PROCESSOR_STRING = "STM32F301"
         # - Processor Quantities
         self.PROCESSOR_ROM_SIZE = 0x10000  
+        self.PROCESSOR_FLASH_PAGE_SIZE = 0x800
+        # - Processor Pages (Linking)
+        self.FLASH_PAGE_BOOTLOADER_START = 0 
+        self.FLASH_PAGE_BOOTLOADER_END = 3 # Exclusive 
+        self.FLASH_PAGE_FIRMWARE_START = 3 # 
+        self.FLASH_PAGE_FIRMWARE_END = 19 # Exclusive 
 
         # - Binary File (*.bin)
         # -- ROM always starts at address 0x0000'0000
         # -- RAM always starts at address 0x0000'0000    
         self.BOOTLOADER_START_ADDRESS_BINFILE = 0x0000
+        self.BOOTLOADER_CRC_ADDRESS_BINFILE = 0x17FC # Exclusive (not included in calc)
         self.BOOTLOADER_END_ADDRESS_BINFILE = 0x1800 # Exclusive (not included in calc)
         # BOOTLOADER CHECKSUM: assummd to be at END_ADDRESS-4 (TODO: REVIEW)
         self.CHECKSUM_CALC_START_ADDRESS_BINFILE = 0x1800
-        # self.CHECKSUM_CALC_END_ADDRESS = 0x97FC # Exclusive (not included in calc)
-        self.CHECKSUM_CALC_END_ADDRESS_BINFILE = 0x7FFC # Exclusive (not included in calc)
+        self.CHECKSUM_CALC_END_ADDRESS_BINFILE = 0x97FC # Exclusive (not included in calc)
+        # self.CHECKSUM_CALC_END_ADDRESS_BINFILE = 0x7FFC # Exclusive (not included in calc)
         # - P21 ODP Specific: Default Binary file is expected to be offset by 0x1800 (first byte is to be placed on mcu at address 0x1800)
         self.DEFAULT_MEMORY_OFFSET_FIRMWARE_BINFILE = 0x1800
 
@@ -72,9 +80,25 @@ class Product_P21Odp_MemoryMap():
     # ======= CRC Data =START=
     def update_all_crc_data(self):
         print("updating stored bootloader crc")
+        stored_bootloader_crc32_list = self.hex_file_in.memory_map_out.memory_map[self.BOOTLOADER_CRC_ADDRESS_BINFILE: self.BOOTLOADER_CRC_ADDRESS_BINFILE + self.CHECKSUM_LENGTH_BYTES]
+        self.stored_bootloader_crc32_value = type_converter.get_u32_value_from_u8_list(stored_bootloader_crc32_list)
+        self.stored_bootloader_crc32_value_str = type_converter.convert_u32_crc_value_to_hex_string(self.stored_bootloader_crc32_value)
         print("updating calculated bootloader crc")
+        self.bootloader_crc32_value = self.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(self.FLASH_PAGE_BOOTLOADER_START,self.FLASH_PAGE_BOOTLOADER_END)), ignore_last_four_bytes=True)
+        self.bootloader_crc32_value_str = type_converter.convert_u32_crc_value_to_hex_string(self.bootloader_crc32_value)
         print("updating stored firmware crc")
+        stored_firmware_crc32_list = self.hex_file_in.memory_map_out.memory_map[self.CHECKSUM_CALC_END_ADDRESS_BINFILE: self.CHECKSUM_CALC_END_ADDRESS_BINFILE + self.CHECKSUM_LENGTH_BYTES]
+        self.stored_firmware_crc32_value = type_converter.get_u32_value_from_u8_list(stored_firmware_crc32_list)
+        self.stored_firmware_crc32_value_str = type_converter.convert_u32_crc_value_to_hex_string(self.stored_firmware_crc32_value)
         print("updating calculated firmware crc")
+        self.firmware_crc32_value = self.hex_file_in.memory_map_out.get_crc_u32_from_page_list(list(range(self.FLASH_PAGE_FIRMWARE_START,self.FLASH_PAGE_FIRMWARE_END)), ignore_last_four_bytes=True)
+        self.firmware_crc32_value_str = type_converter.convert_u32_crc_value_to_hex_string(self.firmware_crc32_value)
+
+    def get_stored_bootloader_crc_u32(self):
+        return 0
+
+    def get_stored_bootloader_crc_u32(self):
+        return 0
 
     def get_all_crc_data_lists(self):
         return self.bootloader_crc_stored_list, self.bootloader_crc_calc_list, self.firmware_crc_stored_list, self.firmware_crc_calc_list
