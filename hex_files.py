@@ -131,7 +131,7 @@ class HexFileInClass():
             if not self.target: # if file did not open properly exit the routine
                 print("no target...")
                 return
-            print("parsing binary file: " + str(time.clock()))
+            # print("parsing binary file: " + str(time.clock()))
             self.parse_binary_file()
         # - hex/text based files
         else:
@@ -139,9 +139,9 @@ class HexFileInClass():
             if not self.target: # if file did not open properly exit the routine
                 # print("no target...")
                 return
-            print("parsing hex file: " + str(time.clock()))
+            # print("parsing hex file: " + str(time.clock()))
             self.parse_hex_file()
-        print("done parsing: " + str(time.clock()))
+        # print("done parsing: " + str(time.clock()))
         self.close_file(self.target)
         # Return pertinent values to the parent
         return self.calculated_checksum
@@ -315,11 +315,11 @@ class HexFileInClass():
 
     def parse_binary_file_data(self, binary_data, start_address=0):
         # start_address = 0
-        print("parse binary file data!")
-        print(binary_data)
-        print("- list of integer data")
+        # print("parse binary file data!")
+        # print(binary_data)
+        # print("- list of integer data")
         list_of_ints_data = list(binary_data)
-        print(list_of_ints_data)
+        # print(list_of_ints_data)
         self.put_data_in_memory_map(start_address, list_of_ints_data)
 
 

@@ -394,8 +394,8 @@ class MemoryMap_STM32_64kB():
         if ignore_last_four_bytes:
             end_address = end_address - 4
 
-        print("start: " + str(hex(start_address)))
-        print("end: " + str(hex(end_address)))
+        # print("start: " + str(hex(start_address)))
+        # print("end: " + str(hex(end_address)))
         crc32_value = self.get_crc32_for_address_range(start_address, end_address)
         return crc32_value
 

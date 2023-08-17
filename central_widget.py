@@ -98,7 +98,7 @@ class CentralWidget(QtWidgets.QFrame):
         # - global layout
         self.layout = QtWidgets.QVBoxLayout()
         # self.layout.addWidget(self.select_drive_fw_file_button)
-        self.layout.addWidget(self.fix_button)
+        # self.layout.addWidget(self.fix_button)
         self.layout.addWidget(self.drive_mcu_fw_groupbox)
         self.layout.addWidget(self.drive_mcu_fw_crc_groupbox)
         self.setLayout(self.layout)
@@ -140,14 +140,14 @@ class CentralWidget(QtWidgets.QFrame):
         # self.selected_file = self.file_select.getOpenFileName(self, 'Select Firmware File', 'c:\\',"Hex files (*.hex)")
 
         if self.selected_file and self.selected_file != ('', ''): # If a file is chosen, the formatting will be checked
-            print('selected_file: ' + str(self.selected_file))
+            # print('selected_file: ' + str(self.selected_file))
             if not app_config.is_python3: # Python2 Platform
                 unencoded_file_name = self.selected_file
-                print('encoded2: ' + str(unencoded_file_name))
+                # print('encoded2: ' + str(unencoded_file_name))
                 # self.selected_file_name = str(self.selected_file)
             else: # Python3 Platform
                 unencoded_file_name = self.selected_file[0]
-                print('encoded3: ' + str(unencoded_file_name))
+                # print('encoded3: ' + str(unencoded_file_name))
                 # self.selected_file_name = str(self.selected_file[0])
             self.selected_file_name = unicode(unencoded_file_name) # unencoded_file_name.encode('utf-8')
             base_file_name = os.path.basename(self.selected_file_name) # File name without the directory path
@@ -176,7 +176,7 @@ class CentralWidget(QtWidgets.QFrame):
     
 
     def update_crc_data_display(self):
-        print("update!")
+        # print("update!")
         bootloader_crc_value = type_converter.get_u32_value_from_u8_list(product_p21odp.hex_file_in.stored_bootloader_checksum)
         bootloader_crc_value_str = self.convert_crc_value_to_hex_string(bootloader_crc_value)
         # bootloader_crc_calc = str(product_p21odp.hex_file_in.calc_bootloader_checksum)
@@ -191,7 +191,7 @@ class CentralWidget(QtWidgets.QFrame):
         self.drive_mcu_fw_crc_groupbox.drive_firmware_read_crc_val_label.setText(firmware_crc_value_str)
         self.drive_mcu_fw_crc_groupbox.drive_firmware_calc_crc_val_label.setText(firmware_crc_calc)
 
-        print("update END!")
+        # print("update END!")
 
     def fix_button_cb(self):
         print("Fixing Checksum!")
@@ -215,17 +215,17 @@ class CentralWidget(QtWidgets.QFrame):
     # ======= Callback Implementations ==END==
     def set_last_selected_directory(self, directory):
         if os.path.exists(directory):
-            print('set last: good path!')
+            # print('set last: good path!')
             self.last_selected_directory = directory
-        else:
-            print('set last: bad path...')
+        # else:
+        #     print('set last: bad path...')
 
     def get_last_selected_directory(self):
         if os.path.exists(self.last_selected_directory):
-            print('get last: good path!')
+            # print('get last: good path!')
             return self.last_selected_directory
         else:
-            print('get last: bad path (returning empty string)...')
+            # print('get last: bad path (returning empty string)...')
             return ""
 
 # DriveFirmwareCrcsWidget: Displays all firmware related CRC Information
