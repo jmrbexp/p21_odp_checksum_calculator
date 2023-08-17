@@ -64,7 +64,7 @@ class CentralWidget(QtWidgets.QFrame):
         # - firmware update buttons
         # -- drive firmware
         self.open_button = QtWidgets.QPushButton("open binary file (hex/hxf/bin)") # TODO: Replace with select_drive_fw_file_button
-        self.select_drive_fw_file_button = QtWidgets.QPushButton("select file")
+        self.select_drive_fw_file_button = QtWidgets.QPushButton("select file (hex/hxf/bin)")
         self.write_drive_fw_file_button = QtWidgets.QPushButton("write")
         self.verify_drive_fw_file_button = QtWidgets.QPushButton("read")
         self.drive_fw_status_label = QtWidgets.QLabel("-")

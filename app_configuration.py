@@ -2,7 +2,13 @@
 # - Created by J.Moon 20200413
 # -- designed to enable setsting of macros 
 
-import sys
+# AppConfigurationOptions: This class contains all configuration options for the app
+# - It's primarily used for enabling debugging routines, and for variants of the product based on the end-user
+import sys # for python2 vs python3 detection
+
+# - import stylesheets
+from style_sheets_regal_green import app_style_regal_green
+from style_sheets_regal_purple import app_style_regal_purple
 
 class AppConfigurationOptions():
     def __init__(self):    # Standard Python Function, called at the instantiation of a class
@@ -22,10 +28,10 @@ class AppConfigurationOptions():
         # Record python version in use
         if sys.version_info[0] >= 3:
             self.is_python3 = True
-            # self.app_style = app_style_regal_green # Green theme signifies Python3 platform
+            self.app_style = app_style_regal_green # Green theme signifies Python3 platform
         else:
             self.is_python3 = False
-            # self.app_style = app_style_regal_purple # Purple theme signifies Python2 platform
+            self.app_style = app_style_regal_purple # Purple theme signifies Python2 platform
 
 
 

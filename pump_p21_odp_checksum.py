@@ -37,7 +37,7 @@ from serial_monitor_gui import SerialMonitorWindow
 from find_files import get_init_file_directory, get_icon_path, get_splash_image_path
 # from hex_files import hex_file_in 
 from product_properties_p21odp import product_p21odp
-from style_sheets import app_style
+# from style_sheets import app_config.app_style
 
 
 
@@ -189,8 +189,8 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
 
     def apply_style_sheets(self):
         # Make each widget group colorful and contents easily visible using css stylesheets
-        self.central_widget.setStyleSheet(app_style.groupboxes + app_style.background_frames + app_style.big_buttons + app_style.combo_boxes + app_style.labels + app_style.check_boxes + app_style.spin_boxes)
-        self.win_serial_monitor.setStyleSheet(app_style.background_frames + app_style.text_boxes)
+        self.central_widget.setStyleSheet(app_config.app_style.groupboxes + app_config.app_style.background_frames + app_config.app_style.big_buttons + app_config.app_style.combo_boxes + app_config.app_style.labels + app_config.app_style.check_boxes + app_config.app_style.spin_boxes)
+        self.win_serial_monitor.setStyleSheet(app_config.app_style.background_frames + app_config.app_style.text_boxes)
 
     # show_all_windows: enable the display of any widgets that are not contained within the QMainWindow
     def show_all_windows(self):
