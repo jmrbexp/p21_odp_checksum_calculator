@@ -29,6 +29,7 @@ if app_config.is_python3:
 from product_properties_p21odp import product_p21odp
 # from hex_files import product_p21odp.hex_file_in
 
+
 # CentralWidget: This is a customizable widget designed as the widget that will change from app to app
 # - you may still need to use the MainAppWidget class to acesses some resources.
 # - this class is a subclass of QFrame
@@ -59,7 +60,6 @@ class CentralWidget(QtWidgets.QFrame):
         # -- drive firmware
         self.drive_mcu_fw_groupbox = QtWidgets.QGroupBox("motor drive")
         self.drive_mcu_firmware_label = QtWidgets.QLabel("firmware")
-        self.drive_mcu_configuration_label = QtWidgets.QLabel("configuration")
 
         # - firmware update buttons
         # -- drive firmware
@@ -69,6 +69,10 @@ class CentralWidget(QtWidgets.QFrame):
         self.verify_drive_fw_file_button = QtWidgets.QPushButton("read")
         self.drive_fw_status_label = QtWidgets.QLabel("-")
         self.drive_fw_status_label.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+
+        # - firmware status buttons
+        # -- drive firmware (crc info)
+        self.drive_mcu_fw_crc_groupbox = DriveFirmwareCrcsWidget()
 
         # -- spacer widgets
         self.spacer = QtWidgets.QLabel() # Used to push all widgets to the top when the window is big
@@ -95,6 +99,7 @@ class CentralWidget(QtWidgets.QFrame):
         # self.layout.addWidget(self.select_drive_fw_file_button)
         self.layout.addWidget(self.fix_button)
         self.layout.addWidget(self.drive_mcu_fw_groupbox)
+        self.layout.addWidget(self.drive_mcu_fw_crc_groupbox)
         self.setLayout(self.layout)
 
         pass
@@ -145,6 +150,7 @@ class CentralWidget(QtWidgets.QFrame):
         if self.selected_file_name:
             self.display_message("importing file file: " + str(self.selected_file_name))
             product_p21odp.hex_file_in.import_log_file(self.selected_file_name)
+            self.select_drive_fw_file_button.setText(base_file_name)
         else:
             self.display_message("could not open file")
 
@@ -167,5 +173,95 @@ class CentralWidget(QtWidgets.QFrame):
         #     product_p21odp.hex_file_in.import_log_file(self.selected_file)
         # else:
         #     self.display_message("could not open file")
+    # ======= Callback Implementations ==END==
+
+
+# DriveFirmwareCrcsWidget: Displays all firmware related CRC Information
+class DriveFirmwareCrcsWidget(QtWidgets.QFrame):
+    def __init__(self):    # Standard Python Function, called at the instantiation of a class
+        super(DriveFirmwareCrcsWidget, self).__init__()      # Calls the basic Widget Init Sequence
+        # Initialize Variables
+        self.init_system()
+        # Create Widgets
+        self.init_widgets()
+        # Assign Widgets to a local layout
+        self.arrange_widgets()
+        # Assign Local Widget Callbacks
+        self.init_callbacks()
+    # ======= Widget Creation/ Arrangement =START=
+    # init_system: Initialize all variables and structures used by this class
+    def init_system(self):
+        self.last_selected_directory = "" # for save to file function
+        pass
+
+    # init_widgets: Initialize all Graphical Objects used by this class
+    def init_widgets(self):
+        # Declare Widgets
+        # - groupboxes
+        # -- drive firmware
+        self.drive_mcu_fw_groupbox = QtWidgets.QGroupBox("motor drive crcs")
+        #
+        self.drive_bootlader_read_crc_label = QtWidgets.QLabel("bootloader crc (read) - ")
+        self.drive_bootlader_read_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.drive_bootlader_read_crc_val_label = QtWidgets.QLabel("0x00000000")
+        #
+        self.drive_bootlader_calc_crc_label = QtWidgets.QLabel("bootloadercrc (calc) - ")
+        self.drive_bootlader_calc_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.drive_bootlader_calc_crc_val_label = QtWidgets.QLabel("0x00000000")
+        #
+        self.drive_firmware_read_crc_label = QtWidgets.QLabel( "firmware crc (read) - ")
+        self.drive_firmware_read_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.drive_firmware_read_crc_val_label = QtWidgets.QLabel( "0x00000000")
+        #
+        self.drive_firmware_calc_crc_label = QtWidgets.QLabel( "firmware crc (calc) - ")
+        self.drive_firmware_calc_crc_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+        self.drive_firmware_calc_crc_val_label = QtWidgets.QLabel( "0x00000000")
+        # - firmware update buttons
+        # -- drive firmware
+        # self.select_drive_fw_file_button = QtWidgets.QPushButton("open binary file (hex/hxf/bin)") # TODO: Replace with select_drive_fw_file_button
+
+        # -- spacer widgets
+        self.spacer = QtWidgets.QLabel() # Used to push all widgets to the top when the window is big
+        self.spacer.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+
+
+    # arrange_widgets: Set up on-screen position of all GUI Objects used by this class
+    def arrange_widgets(self):
+        # Motor Drive Groupbox
+        # - groupbox layout
+        self.drive_fw_layout = QtWidgets.QGridLayout() 
+        self.drive_fw_layout.addWidget(self.drive_bootlader_read_crc_label,0,0)
+        self.drive_fw_layout.addWidget(self.drive_bootlader_calc_crc_label,1,0)
+        self.drive_fw_layout.addWidget(self.drive_firmware_read_crc_label,2,0)
+        self.drive_fw_layout.addWidget(self.drive_firmware_calc_crc_label,3,0)
+        self.drive_fw_layout.addWidget(self.drive_bootlader_read_crc_val_label,0,1)
+        self.drive_fw_layout.addWidget(self.drive_bootlader_calc_crc_val_label,1,1)
+        self.drive_fw_layout.addWidget(self.drive_firmware_read_crc_val_label,2,1)
+        self.drive_fw_layout.addWidget(self.drive_firmware_calc_crc_val_label,3,1)
+        self.drive_fw_layout.setContentsMargins(10,20,10,20)
+        self.drive_mcu_fw_groupbox.setLayout(self.drive_fw_layout)
+        # - global layout
+        self.layout = QtWidgets.QVBoxLayout()
+        self.layout.addWidget(self.drive_mcu_fw_groupbox)
+        self.layout.setContentsMargins(0,0,0,0) # This frame is invisible, allow contents to expand all the way out
+        self.setLayout(self.layout)
+    # ======= Widget Creation/ Arrangement ==END==
+
+    # ======= Widget Status =START=
+    # ======= Widget Status ==END==
+
+    # ======= Callback Assignments =START=
+    def init_callbacks(self):
+        pass
+
+    def set_serial_monitor_callback(self, callback):
+        self.serial_monitor_cb = callback
+
+    def display_message(self, message, rx=False, add_timestamp=True):
+        if self.serial_monitor_cb:
+            self.serial_monitor_cb(message, rx, add_timestamp)
+    # ======= Callback Assignments ==END==
+
+    # ======= Callback Implementations =START=
     # ======= Callback Implementations ==END==
 
