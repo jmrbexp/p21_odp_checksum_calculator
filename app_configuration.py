@@ -14,7 +14,8 @@ class AppConfigurationOptions():
     def __init__(self):    # Standard Python Function, called at the instantiation of a class
         # Initialize Variables
         self.init_system()
-
+        # Version Display
+        self.GUI_MOTOR_CONTROL_VERSION = "1.1.0"
     # ======= Widget Creation/ Arrangement =START=
     def init_system(self):
         # - Widget Enables
