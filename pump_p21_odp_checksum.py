@@ -31,6 +31,7 @@ import time # for getting current time
 # Local GUI Widget Imports
 from app_configuration import app_config
 from central_widget import CentralWidget
+from init_file import init_settings
 from serial_monitor_gui import SerialMonitorWindow
 
 # Local Backend Imports
@@ -121,9 +122,9 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
         self.start_timers()
 
         # Restore Settings from file
-        # self.init_dir = get_init_file_directory()
-        # self.init_file_path = self.init_dir + "settings.ini"
-        # self.load_init_file()
+        self.init_dir = get_init_file_directory()
+        self.init_file_path = self.init_dir + "settings.ini"
+        self.load_init_file()
         # print("QMainWindow init complete: " + str(time.time()))
 
         # Debug Operations
@@ -132,9 +133,25 @@ class MainAppWidget(QtWidgets.QMainWindow): # Declare a class that we've named '
     # ======= Restore Settings From File =START=
     # load_init_file: load saved settings from an init file.
     def load_init_file(self):
-        pass
-        # # Open Com Port pointed to by init file (last opened com port)
-        # com_port_value = init_settings.load_init_file(self.init_file_path)
+        # Get Stored Settings in Init File
+        status = init_settings.load_init_file(self.init_file_path)
+        if status == init_settings.LOAD_INIT_NO_ERROR:
+            # Import Loaded Settings
+            text = "init file loaded.\n"
+            for this_setting in range(len(init_settings.init_file_read_categories)):
+                text += '- ' + init_settings.init_file_read_categories[this_setting] + ': ' + init_settings.init_file_read_values[this_setting] + '\n'
+        else:
+            text = "init file ignored. " + str(status)
+        self.win_serial_monitor.add_message_to_buffer(text, add_timestamp=False)
+
+        # Grab individual settings and restore where appropriate
+        last_dir = init_settings.get_last_selected_directory_from_read_table()
+        if last_dir: # if setting had a value, restore it
+            self.central_widget.set_last_selected_directory(last_dir)
+        else:
+            print('no last dir...')
+
+        
         # if com_port_value:
         #     # print("com port value received by init file: " + str(com_port_value))
         #     self.win_port_select.port_select_init_cb(str(com_port_value))
